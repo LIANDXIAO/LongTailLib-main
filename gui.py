@@ -49,14 +49,12 @@ class LongTailLibGUI:
         self.log_text.config(state='disabled')
 
     def _run_command(self, cmd, cwd=None):
-        """在独立线程中运行命令，防止界面卡死 (已修复编码问题)"""
+        """在独立线程中运行命令，防止界面卡死 """
 
         def target():
             self._log(f">>> 开始执行: {' '.join(cmd)}")
             try:
-                # 核心修复：
-                # 1. 显式指定 encoding='utf-8' 以匹配 Python 脚本输出
-                # 2. 添加 errors='replace'，遇到无法识别的乱码直接替换为 '?'，防止报错奔溃
+
                 process = subprocess.Popen(
                     cmd,
                     stdout=subprocess.PIPE,
@@ -65,7 +63,7 @@ class LongTailLibGUI:
                     bufsize=1,
                     text=True,  # 保持文本模式
                     encoding='utf-8',  # 优先尝试 UTF-8
-                    errors='replace'  # 遇到乱码直接替换，绝不报错
+                    errors='replace'  # 遇到乱码直接替换
                 )
 
                 # 逐行读取输出
@@ -238,8 +236,7 @@ class LongTailLibGUI:
             self.tr_dataset.set("dataset 目录不存在")
 
     def _on_train_click(self):
-        # 修复：因为我们下面会将工作目录(cwd)切换到 system/
-        # 所以脚本名称只需要 "main.py"，不需要再加 "system/" 前缀
+
         script = "main.py"
 
         # 检查文件是否存在 (拼接完整路径进行检查)
@@ -274,4 +271,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = LongTailLibGUI(root)
     root.mainloop()
-##xixihaha
